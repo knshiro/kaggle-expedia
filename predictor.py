@@ -1,7 +1,15 @@
-import pandas
+import pandas as pd
 import random
+import ml_metrics as metrics
 
-# Pick 10000 users
+destinations = pd.read_csv("destinations.csv")
+test = pd.read_csv("test.csv")
+train = pd.read_csv("train.csv")
+
+train["date_time"] = pd.to_datetime(train["date_time"])
+train["year"] = train["date_time"].dt.year
+train["month"] = train["date_time"].dt.month
+
 unique_users = train.user_id.unique()
 
 sel_user_ids = [unique_users[i] for i in sorted(random.sample(range(len(unique_users)), 10000)) ]
@@ -14,13 +22,12 @@ t2 = sel_train[((sel_train.year == 2014) & (sel_train.month >= 8))]
 # Remove click events
 t2 = t2[t2.is_booking == True]
 
-
 df = calc_fast_features(t1)
 
 def calc_fast_features(df):
-    df["date_time"] = pandas.to_datetime(df["date_time"])
-    df["srch_ci"] = pandas.to_datetime(df["srch_ci"], format='%Y-%m-%d', errors="coerce")
-    df["srch_co"] = pandas.to_datetime(df["srch_co"], format='%Y-%m-%d', errors="coerce")
+    df["date_time"] = pd.to_datetime(df["date_time"])
+    df["srch_ci"] = pd.to_datetime(df["srch_ci"], format='%Y-%m-%d', errors="coerce")
+    df["srch_co"] = pd.to_datetime(df["srch_co"], format='%Y-%m-%d', errors="coerce")
     
     props = {}
     for prop in ["month", "day", "hour", "minute", "dayofweek", "quarter"]:
@@ -41,6 +48,5 @@ def calc_fast_features(df):
     ret = ret.join(dest_small, on="srch_destination_id", how='left', rsuffix="dest")
     ret = ret.drop("srch_destination_iddest", axis=1)
     return ret
-
 
 def random
