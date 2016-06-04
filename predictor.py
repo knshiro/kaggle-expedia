@@ -49,4 +49,3 @@ def calc_fast_features(df):
     ret = ret.drop("srch_destination_iddest", axis=1)
     return ret
 
-def random
